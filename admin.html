@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel · Vitorioso Doces</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Karla:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f4e8d4; --cream-soft:#faf2e3; --cream-deep:#ead9bd;
+    --ink:#3f1d10; --brown:#5b2417; --brown-mid:#7c3a22;
+    --caramel:#b06a35; --gold:#d3a05c; --ok:#1faa55;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ font-family:'Karla',sans-serif; background:linear-gradient(160deg,var(--cream-soft),var(--cream) 60%,var(--cream-deep));
+    color:var(--ink); min-height:100vh; }
+  .topbar{ display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:14px 20px; background:var(--brown); color:var(--cream-soft);
+    position:sticky; top:0; z-index:20; box-shadow:0 8px 24px -10px rgba(0,0,0,.4); }
+  .topbar h1{ font-family:'Fraunces',serif; font-size:1.15rem; font-weight:900; margin-right:auto; }
+  .topbar h1 small{ font-family:'Karla'; font-weight:600; opacity:.7; font-size:.75rem; display:block; }
+  .tb-btn{ border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:.85rem;
+    padding:10px 16px; border-radius:999px; transition:transform .2s;
+    background:rgba(255,255,255,.12); color:var(--cream-soft); border:1.5px solid rgba(230,200,150,.35); }
+  .tb-btn:hover{ transform:translateY(-2px); }
+  .tb-btn.primario{ background:linear-gradient(135deg,#27c065,#128c46); border-color:transparent; color:#fff; }
+  .layout{ display:grid; grid-template-columns:400px 1fr; gap:0; height:calc(100vh - 64px); }
+  @media (max-width:900px){ .layout{ grid-template-columns:1fr; height:auto; }
+    .preview-pane{ height:70vh; } }
+
+  .painel{ overflow-y:auto; padding:18px 16px 60px; }
+  details.grupo{ background:rgba(255,255,255,.55); border:1.5px solid rgba(255,255,255,.7);
+    border-radius:16px; margin-bottom:12px; overflow:hidden;
+    box-shadow:0 10px 26px -16px rgba(63,29,16,.3); }
+  details.grupo > summary{ cursor:pointer; list-style:none; padding:15px 18px;
+    font-weight:800; font-size:.98rem; color:var(--brown);
+    display:flex; align-items:center; gap:10px; user-select:none; }
+  details.grupo > summary::before{ content:"▸"; color:var(--caramel); transition:transform .2s; }
+  details.grupo[open] > summary::before{ transform:rotate(90deg); }
+  .grupo-corpo{ padding:4px 18px 18px; display:flex; flex-direction:column; gap:12px; }
+
+  label.campo{ display:flex; flex-direction:column; gap:5px; font-size:.82rem; font-weight:700; color:var(--brown-mid); }
+  input[type=text], input[type=number], textarea, select{
+    font-family:inherit; font-size:.92rem; padding:9px 12px; border-radius:10px;
+    border:1.5px solid rgba(124,58,34,.25); background:#fff; color:var(--ink); width:100%; }
+  textarea{ resize:vertical; min-height:60px; }
+  input:focus, textarea:focus, select:focus{ outline:2px solid var(--gold); border-color:transparent; }
+  .linha{ display:flex; gap:10px; }
+  .linha > *{ flex:1; }
+  .linha-cor{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .cor-item{ display:flex; align-items:center; gap:8px; background:#fff; padding:7px 10px;
+    border-radius:10px; border:1.5px solid rgba(124,58,34,.15); font-size:.8rem; font-weight:700; }
+  .cor-item input[type=color]{ width:34px; height:30px; border:none; background:none; cursor:pointer; padding:0; }
+  .chk{ display:flex; align-items:center; gap:9px; font-size:.9rem; font-weight:700; color:var(--brown-mid); cursor:pointer; }
+  .chk input{ width:18px; height:18px; accent-color:var(--caramel); }
+  .faixa-range{ display:flex; align-items:center; gap:10px; }
+  .faixa-range input[type=range]{ flex:1; accent-color:var(--caramel); }
+  .faixa-range output{ font-weight:800; font-size:.85rem; min-width:46px; text-align:right; color:var(--brown); }
+
+  .bloco-item{ background:#fff; border:1.5px solid rgba(124,58,34,.18); border-radius:14px;
+    padding:14px; display:flex; flex-direction:column; gap:10px; }
+  .bloco-item .cab{ display:flex; align-items:center; gap:8px; }
+  .bloco-item .cab strong{ flex:1; color:var(--brown); font-size:.92rem; }
+  .mini-btn{ border:none; cursor:pointer; font-family:inherit; font-weight:800; font-size:.78rem;
+    padding:6px 11px; border-radius:8px; background:var(--cream); color:var(--brown-mid);
+    border:1px solid rgba(124,58,34,.25); }
+  .mini-btn:hover{ background:var(--cream-deep); }
+  .mini-btn.perigo{ color:#b3261e; border-color:rgba(179,38,30,.3); }
+  .mini-btn.add{ background:linear-gradient(135deg,var(--caramel),var(--brown-mid)); color:#fff; border:none;
+    padding:10px 16px; border-radius:999px; font-size:.85rem; align-self:flex-start; }
+  .prod-linha{ background:var(--cream-soft); border-radius:10px; padding:10px;
+    display:flex; flex-direction:column; gap:8px; border:1px solid rgba(124,58,34,.12); }
+  .dica{ font-size:.76rem; color:var(--brown-mid); opacity:.85; line-height:1.45; font-weight:600; }
+
+  .preview-pane{ position:relative; background:#e9dcc3; }
+  .preview-pane iframe{ width:100%; height:100%; border:none; display:block; }
+  .preview-tools{ position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:5;
+    display:flex; gap:6px; background:rgba(63,29,16,.85); padding:6px; border-radius:999px; }
+  .preview-tools button{ border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:.75rem;
+    padding:6px 13px; border-radius:999px; background:transparent; color:var(--cream-soft); }
+  .preview-tools button.ativo{ background:var(--caramel); }
+  /* ── tela de login ── */
+  .login-overlay{ position:fixed; top:0; right:0; bottom:0; left:0; z-index:100;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+    background:linear-gradient(160deg,var(--cream-soft),var(--cream) 60%,var(--cream-deep)); }
+  .login-card{ width:100%; max-width:380px; background:rgba(255,255,255,.7);
+    border:1.5px solid rgba(255,255,255,.9); border-radius:22px; padding:36px 30px;
+    box-shadow:0 24px 60px -20px rgba(63,29,16,.4); text-align:center; }
+  .login-card img{ width:110px; margin:0 auto 10px; display:block; }
+  .login-card h2{ font-family:'Fraunces',serif; font-weight:900; color:var(--brown); font-size:1.3rem; }
+  .login-card p{ font-size:.82rem; color:var(--brown-mid); margin:6px 0 20px; font-weight:600; }
+  .login-card input{ width:100%; font-family:inherit; font-size:.95rem; padding:12px 14px;
+    border-radius:12px; border:1.5px solid rgba(124,58,34,.25); background:#fff;
+    color:var(--ink); margin-bottom:10px; }
+  .login-card input:focus{ outline:2px solid var(--gold); border-color:transparent; }
+  .login-card button{ width:100%; border:none; cursor:pointer; font-family:inherit; font-weight:800;
+    font-size:.95rem; padding:13px; border-radius:999px; color:#fff; margin-top:6px;
+    background:linear-gradient(135deg,var(--caramel),var(--brown-mid));
+    transition:transform .2s; }
+  .login-card button:hover{ transform:translateY(-2px); }
+  .login-erro{ color:#b3261e; font-size:.82rem; font-weight:700; min-height:18px; margin-top:10px; }
+  body.bloqueado .topbar, body.bloqueado .layout{ display:none; }
+
+  .toast{ position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(80px); z-index:99;
+    background:var(--brown); color:var(--cream-soft); font-weight:700; font-size:.9rem;
+    padding:12px 22px; border-radius:999px; transition:transform .35s cubic-bezier(.2,.9,.3,1.3);
+    box-shadow:0 14px 30px -10px rgba(0,0,0,.5); }
+  .toast.show{ transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="login-overlay" id="loginOverlay" style="display:none">
+  <form class="login-card" id="loginForm">
+    <img src="logo.png" alt="Logo">
+    <h2>Painel do Cardápio</h2>
+    <p>Acesso restrito — entre com seu e-mail e senha.</p>
+    <input type="email" id="loginEmail" placeholder="E-mail" autocomplete="username" required>
+    <input type="password" id="loginSenha" placeholder="Senha" autocomplete="current-password" required>
+    <button type="submit">Entrar</button>
+    <div class="login-erro" id="loginErro"></div>
+  </form>
+</div>
+
+<div class="topbar">
+  <h1>Painel do Cardápio<small>as mudanças aparecem na prévia ao lado · rascunho salvo automaticamente</small></h1>
+  <button class="tb-btn" id="btImportar">Importar</button>
+  <button class="tb-btn" id="btExportar">Exportar</button>
+  <button class="tb-btn" id="btResetar">Restaurar padrão</button>
+  <button class="tb-btn primario" id="btBaixar">⬇ Baixar site atualizado</button>
+</div>
+
+<div class="layout">
+  <div class="painel" id="painel"></div>
+  <div class="preview-pane">
+    <div class="preview-tools">
+      <button data-w="375" >Celular</button>
+      <button data-w="768">Tablet</button>
+      <button data-w="0" class="ativo">Computador</button>
+    </div>
+    <iframe id="preview" src="index.html?rascunho=1"></iframe>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="arquivoImport" accept=".json" style="display:none">
+
+<script>
+(function(){
+'use strict';
+
+var CFG = null, PADRAO = null;
+var preview = document.getElementById('preview');
+
+/* ── acesso restrito ───────────────────────────────────────
+   A senha nunca fica salva aqui — só a impressão digital
+   (SHA-256 de "email|senha|sal"). Além desta tela, alterar o
+   site publicado exige acesso à sua conta do GitHub.        */
+var AUTH_SAL = 'vitorioso-doces-v1';
+var AUTH_HASH = '35c0fcb7a4b8f20c32992fe00eb8d3d982e8d4d352b575928e65d30db24cdcdb';
+
+function sha256hex(txt){
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt)).then(function(buf){
+    return Array.prototype.map.call(new Uint8Array(buf), function(b){
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+  });
+}
+function iniciaLogin(){
+  var overlay = document.getElementById('loginOverlay');
+  if (sessionStorage.getItem('vd-auth') === AUTH_HASH) { carregaConfig(); return; }
+  document.body.classList.add('bloqueado');
+  overlay.style.display = 'flex';
+  document.getElementById('loginForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    var senha = document.getElementById('loginSenha').value;
+    sha256hex(email + '|' + senha + '|' + AUTH_SAL).then(function(h){
+      if (h === AUTH_HASH) {
+        sessionStorage.setItem('vd-auth', h);
+        overlay.style.display = 'none';
+        document.body.classList.remove('bloqueado');
+        carregaConfig();
+      } else {
+        document.getElementById('loginErro').textContent = 'E-mail ou senha incorretos.';
+      }
+    });
+  });
+}
+
+/* ── util ── */
+function clona(o){ return JSON.parse(JSON.stringify(o)); }
+function get(obj, caminho){ return caminho.split('.').reduce(function(a,k){ return a ? a[k] : undefined; }, obj); }
+function set(obj, caminho, v){
+  var ks = caminho.split('.'), o = obj;
+  for (var i=0;i<ks.length-1;i++) o = o[ks[i]];
+  o[ks[ks.length-1]] = v;
+}
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tm); t._tm = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+function salva(){
+  localStorage.setItem('vd-draft', JSON.stringify(CFG));
+  try { preview.contentWindow.postMessage({ type:'vd-config', config: CFG }, '*'); } catch(e){}
+}
+
+/* ── carregamento da configuração ── */
+function extraiConfig(html){
+  var m = html.match(/<script id="site-config"[^>]*>([\s\S]*?)<\/script>/);
+  return m ? JSON.parse(m[1]) : null;
+}
+function carregaConfig(){
+  fetch('index.html', { cache:'no-store' }).then(function(r){ return r.text(); }).then(function(html){
+    PADRAO = extraiConfig(html);
+    var rascunho = null;
+    try { rascunho = JSON.parse(localStorage.getItem('vd-draft')); } catch(e){}
+    CFG = rascunho || clona(PADRAO);
+    montaPainel(); salva();
+  }).catch(function(){
+    toast('Não consegui ler o index.html — abra pelo servidor, não pelo arquivo.');
+  });
+}
+iniciaLogin();
+
+/* ── construtores de campos ── */
+function el(html){
+  var d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstChild;
+}
+function campoTexto(rotulo, caminho, multi, placeholder){
+  var c = el('<label class="campo">' + rotulo + (multi
+    ? '<textarea placeholder="' + (placeholder||'') + '"></textarea>'
+    : '<input type="text" placeholder="' + (placeholder||'') + '">') + '</label>');
+  var inp = c.querySelector('input,textarea');
+  inp.value = get(CFG, caminho) || '';
+  inp.addEventListener('input', function(){ set(CFG, caminho, inp.value); salva(); });
+  return c;
+}
+function campoSelect(rotulo, caminho, opcoes, aoMudar){
+  var c = el('<label class="campo">' + rotulo + '<select></select></label>');
+  var sel = c.querySelector('select');
+  opcoes.forEach(function(o){
+    var op = document.createElement('option');
+    op.value = o[0]; op.textContent = o[1]; sel.appendChild(op);
+  });
+  sel.value = get(CFG, caminho);
+  sel.addEventListener('change', function(){
+    set(CFG, caminho, sel.value); salva(); if (aoMudar) aoMudar(sel.value);
+  });
+  return c;
+}
+function campoRange(rotulo, caminho, min, max, passo, sufixo){
+  var c = el('<label class="campo">' + rotulo +
+    '<span class="faixa-range"><input type="range" min="'+min+'" max="'+max+'" step="'+passo+'"><output></output></span></label>');
+  var inp = c.querySelector('input'), out = c.querySelector('output');
+  inp.value = get(CFG, caminho); out.value = inp.value + (sufixo||'');
+  inp.addEventListener('input', function(){
+    set(CFG, caminho, parseFloat(inp.value)); out.value = inp.value + (sufixo||''); salva();
+  });
+  return c;
+}
+function campoCheck(rotulo, caminho){
+  var c = el('<label class="chk"><input type="checkbox"> ' + rotulo + '</label>');
+  var inp = c.querySelector('input');
+  inp.checked = !!get(CFG, caminho);
+  inp.addEventListener('change', function(){ set(CFG, caminho, inp.checked); salva(); });
+  return c;
+}
+function campoCor(rotulo, caminho){
+  var c = el('<label class="cor-item"><input type="color"><span>' + rotulo + '</span></label>');
+  var inp = c.querySelector('input');
+  inp.value = get(CFG, caminho);
+  inp.addEventListener('input', function(){ set(CFG, caminho, inp.value); salva(); });
+  return c;
+}
+function grupo(titulo, aberto){
+  var d = el('<details class="grupo"' + (aberto ? ' open' : '') + '><summary>' + titulo + '</summary><div class="grupo-corpo"></div></details>');
+  return { raiz: d, corpo: d.querySelector('.grupo-corpo') };
+}
+
+var FONTES = ['Fraunces','Playfair Display','Lora','DM Serif Display','Oswald','Bebas Neue','Poppins','Montserrat','Karla','Nunito','Quicksand'];
+var ARTES = [['pote','Pote em camadas'],['brownie','Brownie'],['copo','Taça com colher'],['torta','Pote com maracujá'],['cupcake','Cupcake'],['docinho','Docinhos'],['fatia','Fatia de bolo'],['estrela','Estrela']];
+var UNIDADES = ['ml','L','kg','g','un','outro'];
+
+/* ── montagem do painel ── */
+function montaPainel(){
+  var p = document.getElementById('painel');
+  p.innerHTML = '';
+
+  /* Aparência */
+  var g1 = grupo('🎨 Aparência (cores, fontes e estilo)', true);
+  var grid = el('<div class="linha-cor"></div>');
+  [['fundo1','Fundo claro'],['fundo2','Fundo médio'],['fundo3','Fundo escuro'],
+   ['tinta','Texto principal'],['marrom','Marrom títulos'],['marromMedio','Marrom médio'],
+   ['caramelo','Caramelo'],['dourado','Dourado'],['whats','Verde WhatsApp'],['whatsEscuro','Verde escuro']]
+   .forEach(function(par){ grid.appendChild(campoCor(par[1], 'tema.cores.' + par[0])); });
+  g1.corpo.appendChild(grid);
+  var fontesOp = FONTES.map(function(f){ return [f, f]; });
+  g1.corpo.appendChild(campoSelect('Fonte dos títulos', 'tema.fonteTitulos', fontesOp));
+  g1.corpo.appendChild(campoSelect('Fonte dos destaques (nomes das seções)', 'tema.fonteDestaques', fontesOp));
+  g1.corpo.appendChild(campoSelect('Fonte dos textos', 'tema.fonteTexto', fontesOp));
+  g1.corpo.appendChild(campoRange('Tamanho base do texto', 'tema.tamanhoBase', 13, 20, 1, 'px'));
+  g1.corpo.appendChild(campoRange('Escala dos títulos', 'tema.escalaTitulos', 0.8, 1.4, 0.05, 'x'));
+  g1.corpo.appendChild(campoSelect('Estilo dos campos', 'tema.estiloCampos',
+    [['vidro','Vidro fosco (glassmorphism)'],['solido','Sólido'],['contorno','Contorno']]));
+  g1.corpo.appendChild(campoRange('Arredondamento dos cantos', 'tema.arredondamento', 0, 40, 2, 'px'));
+  g1.corpo.appendChild(campoCheck('Animações de fundo ligadas (confeitos, faixa, selo…)', 'tema.animacoes'));
+  p.appendChild(g1.raiz);
+
+  /* Layout */
+  var g2 = grupo('📐 Layout (modelos e colunas)');
+  g2.corpo.appendChild(campoSelect('Modelo do topo', 'layout.cabecalho',
+    [['classico','Clássico — logo grande centralizada'],['compacto','Compacto — menor, direto ao cardápio'],['faixa','Faixa — logo à esquerda, texto à direita']]));
+  g2.corpo.appendChild(campoSelect('Modelo do rodapé', 'layout.rodape',
+    [['curvo','Curvo escuro com selo (atual)'],['reto','Reto escuro com selo'],['claro','Claro minimalista']]));
+  g2.corpo.appendChild(campoSelect('Produtos por linha (telas grandes)', 'layout.colunas',
+    [['1','1 por linha'],['2','2 por linha'],['3','3 por linha'],['4','4 por linha']], function(v){
+      CFG.layout.colunas = parseInt(v, 10); salva();
+    }));
+  p.appendChild(g2.raiz);
+
+  /* Topo */
+  var g3 = grupo('🏠 Topo (textos e selo giratório)');
+  g3.corpo.appendChild(campoTexto('Título principal', 'topo.titulo'));
+  g3.corpo.appendChild(campoTexto('Subtítulo', 'topo.subtitulo', true));
+  g3.corpo.appendChild(campoTexto('Nota de entrega (aparece com o telefone)', 'topo.notaEntrega'));
+  g3.corpo.appendChild(campoSelect('Selo redondo do topo', 'topo.selo.modo',
+    [['girando','Girando'],['fixo','Parado'],['oculto','Não mostrar']]));
+  g3.corpo.appendChild(campoTexto('Texto ao redor do selo', 'topo.selo.texto'));
+  g3.corpo.appendChild(campoTexto('Texto do centro do selo', 'topo.selo.centro'));
+  g3.corpo.appendChild(campoRange('Tamanho do selo', 'topo.selo.tamanho', 70, 160, 5, 'px'));
+  p.appendChild(g3.raiz);
+
+  /* Faixa */
+  var g4 = grupo('🎞 Faixa animada');
+  g4.corpo.appendChild(campoCheck('Mostrar a faixa em movimento', 'faixa.ativa'));
+  var faixaTxt = el('<label class="campo">Itens da faixa (um por linha)<textarea></textarea></label>');
+  faixaTxt.querySelector('textarea').value = CFG.faixa.itens.join('\n');
+  faixaTxt.querySelector('textarea').addEventListener('input', function(){
+    CFG.faixa.itens = this.value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+    salva();
+  });
+  g4.corpo.appendChild(faixaTxt);
+  g4.corpo.appendChild(campoRange('Velocidade (segundos por volta — menor = mais rápido)', 'faixa.velocidade', 8, 60, 1, 's'));
+  p.appendChild(g4.raiz);
+
+  /* Produtos */
+  var g5 = grupo('🧁 Produtos e seções', true);
+  var listaSec = el('<div style="display:flex;flex-direction:column;gap:12px"></div>');
+  g5.corpo.appendChild(el('<p class="dica">Cada seção vira um card no cardápio. Na mensagem personalizada você pode usar {produto}, {preco} e {medida} — se deixar vazia, uso a mensagem padrão do WhatsApp.</p>'));
+  g5.corpo.appendChild(listaSec);
+  var btAddSec = el('<button class="mini-btn add">+ Adicionar seção</button>');
+  btAddSec.addEventListener('click', function(){
+    CFG.secoes.push({ id:'secao' + Date.now().toString(36), titulo:'Nova seção', etiqueta:'', subtitulo:'', arte:'estrela', paginaSeparada:false, produtos:[] });
+    salva(); desenhaSecoes(listaSec);
+  });
+  g5.corpo.appendChild(btAddSec);
+  desenhaSecoes(listaSec);
+  p.appendChild(g5.raiz);
+
+  /* WhatsApp */
+  var g6 = grupo('💬 WhatsApp e telefone');
+  g6.corpo.appendChild(campoTexto('Número do WhatsApp que recebe os pedidos (só números, com DDI e DDD)', 'whatsapp.numero', false, '5565999815379'));
+  g6.corpo.appendChild(campoTexto('Telefone exibido no site', 'whatsapp.telefoneExibido', false, '(65) 99981-5379'));
+  g6.corpo.appendChild(campoTexto('Mensagem padrão do botão Pedir — use {produto}, {preco}, {medida}', 'whatsapp.mensagemPadrao', true));
+  g6.corpo.appendChild(campoTexto('Mensagem do botão principal / flutuante', 'whatsapp.mensagemGeral', true));
+  p.appendChild(g6.raiz);
+
+  /* Menu e páginas */
+  var g7 = grupo('🧭 Menu de navegação e páginas');
+  g7.corpo.appendChild(campoCheck('Mostrar menu no topo do site', 'menuNav.ativo'));
+  var listaNav = el('<div style="display:flex;flex-direction:column;gap:10px"></div>');
+  g7.corpo.appendChild(listaNav);
+  var btAddNav = el('<button class="mini-btn add">+ Adicionar item ao menu</button>');
+  btAddNav.addEventListener('click', function(){
+    CFG.menuNav.itens.push({ tipo:'sobre', rotulo:'Sobre nós' });
+    salva(); desenhaNav(listaNav);
+  });
+  g7.corpo.appendChild(btAddNav);
+  desenhaNav(listaNav);
+
+  g7.corpo.appendChild(el('<p class="dica" style="margin-top:6px">📄 Página "Sobre nós":</p>'));
+  g7.corpo.appendChild(campoCheck('Ativar página Sobre nós', 'paginas.sobre.ativa'));
+  g7.corpo.appendChild(campoTexto('Título', 'paginas.sobre.titulo'));
+  g7.corpo.appendChild(campoTexto('Texto', 'paginas.sobre.texto', true));
+  g7.corpo.appendChild(el('<p class="dica" style="margin-top:6px">📍 Página "Localização":</p>'));
+  g7.corpo.appendChild(campoCheck('Ativar página Localização', 'paginas.local.ativa'));
+  g7.corpo.appendChild(campoTexto('Título', 'paginas.local.titulo'));
+  g7.corpo.appendChild(campoTexto('Endereço', 'paginas.local.endereco'));
+  g7.corpo.appendChild(campoTexto('Link do Google Maps', 'paginas.local.linkMaps', false, 'https://maps.app.goo.gl/…'));
+  g7.corpo.appendChild(campoTexto('Texto', 'paginas.local.texto', true));
+  p.appendChild(g7.raiz);
+
+  /* Passos e rodapé */
+  var g8 = grupo('👣 Passos "Como funciona" e rodapé');
+  g8.corpo.appendChild(campoCheck('Mostrar a seção "Como funciona"', 'passos.ativo'));
+  CFG.passos.itens.forEach(function(_, i){
+    g8.corpo.appendChild(campoTexto('Passo ' + (i+1) + ' — título', 'passos.itens.' + i + '.titulo'));
+    g8.corpo.appendChild(campoTexto('Passo ' + (i+1) + ' — texto', 'passos.itens.' + i + '.texto', true));
+  });
+  g8.corpo.appendChild(campoTexto('Texto do rodapé', 'rodape.texto'));
+  g8.corpo.appendChild(campoTexto('Instagram (sem @)', 'marca.instagram'));
+  g8.corpo.appendChild(campoTexto('Nome da marca', 'marca.nome'));
+  p.appendChild(g8.raiz);
+}
+
+/* ── seções e produtos ── */
+function desenhaSecoes(cont){
+  cont.innerHTML = '';
+  CFG.secoes.forEach(function(sec, si){
+    var b = el('<div class="bloco-item"></div>');
+    var cab = el('<div class="cab"><strong>' + (sec.titulo || 'Seção') + '</strong></div>');
+    ['▲','▼'].forEach(function(seta, k){
+      var bt = el('<button class="mini-btn">' + seta + '</button>');
+      bt.addEventListener('click', function(){
+        var j = k === 0 ? si - 1 : si + 1;
+        if (j < 0 || j >= CFG.secoes.length) return;
+        var tmp = CFG.secoes[si]; CFG.secoes[si] = CFG.secoes[j]; CFG.secoes[j] = tmp;
+        salva(); desenhaSecoes(cont);
+      });
+      cab.appendChild(bt);
+    });
+    var btDel = el('<button class="mini-btn perigo">Excluir</button>');
+    btDel.addEventListener('click', function(){
+      if (!confirm('Excluir a seção "' + sec.titulo + '" e todos os produtos dela?')) return;
+      CFG.secoes.splice(si, 1); salva(); desenhaSecoes(cont);
+    });
+    cab.appendChild(btDel);
+    b.appendChild(cab);
+
+    b.appendChild(inputLigado('Título da seção', sec, 'titulo', function(){ cab.querySelector('strong').textContent = sec.titulo; }));
+    b.appendChild(inputLigado('Etiqueta ao lado do título (ex.: 250ml)', sec, 'etiqueta'));
+    b.appendChild(inputLigado('Frase da seção', sec, 'subtitulo'));
+
+    var selArte = el('<label class="campo">Desenho da seção<select></select></label>');
+    ARTES.forEach(function(a){
+      var op = document.createElement('option'); op.value = a[0]; op.textContent = a[1];
+      selArte.querySelector('select').appendChild(op);
+    });
+    selArte.querySelector('select').value = sec.arte || 'estrela';
+    selArte.querySelector('select').addEventListener('change', function(){ sec.arte = this.value; salva(); });
+    b.appendChild(selArte);
+
+    var chkPag = el('<label class="chk"><input type="checkbox"> Tirar do cardápio principal (mostrar só em página própria pelo menu)</label>');
+    chkPag.querySelector('input').checked = !!sec.paginaSeparada;
+    chkPag.querySelector('input').addEventListener('change', function(){ sec.paginaSeparada = this.checked; salva(); });
+    b.appendChild(chkPag);
+
+    (sec.produtos || []).forEach(function(prod, pi){
+      b.appendChild(desenhaProduto(sec, prod, pi, cont));
+    });
+    var btAddProd = el('<button class="mini-btn add">+ Adicionar produto</button>');
+    btAddProd.addEventListener('click', function(){
+      sec.produtos.push({ nome:'Novo produto', preco:'R$ 0', medida:'', mensagem:'' });
+      salva(); desenhaSecoes(cont);
+    });
+    b.appendChild(btAddProd);
+    cont.appendChild(b);
+  });
+}
+
+function desenhaProduto(sec, prod, pi, cont){
+  var d = el('<div class="prod-linha"></div>');
+  var l1 = el('<div class="linha"></div>');
+  l1.appendChild(inputLigado('Nome', prod, 'nome'));
+  l1.appendChild(inputLigado('Valor (ex.: R$ 12)', prod, 'preco'));
+  d.appendChild(l1);
+
+  /* medida: quantidade + unidade (ml, L, kg, g, un, outro) */
+  var m = String(prod.medida || '');
+  var qtdIni = (m.match(/^[\d.,]+/) || [''])[0];
+  var unIni = m.replace(/^[\d.,]+\s*/, '');
+  var unPadrao = UNIDADES.indexOf(unIni) >= 0 ? unIni : (unIni ? 'outro' : 'ml');
+  var l2 = el('<div class="linha">' +
+    '<label class="campo">Quantidade<input type="text" placeholder="250"></label>' +
+    '<label class="campo">Unidade<select></select></label>' +
+    '<label class="campo" style="display:none">Qual unidade?<input type="text" placeholder="fatia, cento…"></label>' +
+    '</div>');
+  var inQtd = l2.querySelectorAll('input')[0];
+  var inOutro = l2.querySelectorAll('input')[1];
+  var selUn = l2.querySelector('select');
+  UNIDADES.forEach(function(u){
+    var op = document.createElement('option');
+    op.value = u; op.textContent = u === 'outro' ? 'outro…' : u;
+    selUn.appendChild(op);
+  });
+  inQtd.value = qtdIni; selUn.value = unPadrao;
+  if (unPadrao === 'outro') { inOutro.value = unIni; inOutro.parentElement.style.display = ''; }
+  function montaMedida(){
+    var un = selUn.value === 'outro' ? inOutro.value.trim() : selUn.value;
+    inOutro.parentElement.style.display = selUn.value === 'outro' ? '' : 'none';
+    prod.medida = inQtd.value.trim() ? (inQtd.value.trim() + (un ? un : '')) : '';
+    salva();
+  }
+  inQtd.addEventListener('input', montaMedida);
+  selUn.addEventListener('change', montaMedida);
+  inOutro.addEventListener('input', montaMedida);
+  d.appendChild(l2);
+
+  var txtMsg = el('<label class="campo">Mensagem ao clicar em Pedir (vazio = padrão)<textarea placeholder="Olá! Quero pedir: *{produto}* — {preco} 😋"></textarea></label>');
+  txtMsg.querySelector('textarea').value = prod.mensagem || '';
+  txtMsg.querySelector('textarea').addEventListener('input', function(){ prod.mensagem = this.value; salva(); });
+  d.appendChild(txtMsg);
+
+  var btDel = el('<button class="mini-btn perigo" style="align-self:flex-end">Remover produto</button>');
+  btDel.addEventListener('click', function(){
+    sec.produtos.splice(pi, 1); salva(); desenhaSecoes(cont);
+  });
+  d.appendChild(btDel);
+  return d;
+}
+
+function inputLigado(rotulo, obj, chave, extra){
+  var c = el('<label class="campo">' + rotulo + '<input type="text"></label>');
+  var inp = c.querySelector('input');
+  inp.value = obj[chave] || '';
+  inp.addEventListener('input', function(){ obj[chave] = inp.value; salva(); if (extra) extra(); });
+  return c;
+}
+
+/* ── itens do menu ── */
+function desenhaNav(cont){
+  cont.innerHTML = '';
+  CFG.menuNav.itens.forEach(function(item, i){
+    var d = el('<div class="prod-linha"></div>');
+    var l = el('<div class="linha"></div>');
+    var sel = el('<label class="campo">Abre o quê?<select>' +
+      '<option value="sobre">Página Sobre nós</option>' +
+      '<option value="local">Página Localização</option>' +
+      '<option value="secao">Página de uma seção</option>' +
+      '<option value="link">Link externo</option></select></label>');
+    sel.querySelector('select').value = item.tipo;
+    l.appendChild(sel);
+    l.appendChild(inputLigado('Texto do botão', item, 'rotulo'));
+    d.appendChild(l);
+
+    var selSec = el('<label class="campo">Qual seção?<select></select></label>');
+    CFG.secoes.forEach(function(s){
+      var op = document.createElement('option'); op.value = s.id; op.textContent = s.titulo;
+      selSec.querySelector('select').appendChild(op);
+    });
+    selSec.querySelector('select').value = item.secaoId || (CFG.secoes[0] && CFG.secoes[0].id);
+    selSec.style.display = item.tipo === 'secao' ? '' : 'none';
+    selSec.querySelector('select').addEventListener('change', function(){ item.secaoId = this.value; salva(); });
+    d.appendChild(selSec);
+
+    var inUrl = inputLigado('Endereço do link (https://…)', item, 'url');
+    inUrl.style.display = item.tipo === 'link' ? '' : 'none';
+    d.appendChild(inUrl);
+
+    sel.querySelector('select').addEventListener('change', function(){
+      item.tipo = this.value;
+      selSec.style.display = item.tipo === 'secao' ? '' : 'none';
+      inUrl.style.display = item.tipo === 'link' ? '' : 'none';
+      if (item.tipo === 'secao' && !item.secaoId && CFG.secoes[0]) item.secaoId = CFG.secoes[0].id;
+      salva();
+    });
+
+    var btDel = el('<button class="mini-btn perigo" style="align-self:flex-end">Remover</button>');
+    btDel.addEventListener('click', function(){ CFG.menuNav.itens.splice(i, 1); salva(); desenhaNav(cont); });
+    d.appendChild(btDel);
+    cont.appendChild(d);
+  });
+}
+
+/* ── botões da barra ── */
+document.getElementById('btBaixar').addEventListener('click', function(){
+  fetch('index.html', { cache:'no-store' }).then(function(r){ return r.text(); }).then(function(html){
+    var json = JSON.stringify(CFG, null, 2).replace(/</g, '\\u003c');
+    var novo = html.replace(/(<script id="site-config"[^>]*>)[\s\S]*?(<\/script>)/,
+      function(_, a, b){ return a + '\n' + json + '\n' + b; });
+    var blob = new Blob([novo], { type:'text/html' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'index.html';
+    document.body.appendChild(a); a.click(); a.remove();
+    toast('Baixado! Suba este index.html (junto com logo.png) na sua hospedagem.');
+  });
+});
+document.getElementById('btExportar').addEventListener('click', function(){
+  var blob = new Blob([JSON.stringify(CFG, null, 2)], { type:'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'configuracao-cardapio.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('Configurações exportadas.');
+});
+document.getElementById('btImportar').addEventListener('click', function(){
+  document.getElementById('arquivoImport').click();
+});
+document.getElementById('arquivoImport').addEventListener('change', function(){
+  var f = this.files[0]; if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function(){
+    try {
+      CFG = JSON.parse(fr.result);
+      salva(); montaPainel(); toast('Configurações importadas!');
+    } catch(e){ toast('Arquivo inválido.'); }
+  };
+  fr.readAsText(f);
+  this.value = '';
+});
+document.getElementById('btResetar').addEventListener('click', function(){
+  if (!confirm('Descartar todas as mudanças e voltar ao padrão do site publicado?')) return;
+  CFG = clona(PADRAO);
+  localStorage.removeItem('vd-draft');
+  salva(); montaPainel(); toast('Configurações restauradas.');
+});
+
+/* ── tamanhos de prévia ── */
+document.querySelectorAll('.preview-tools button').forEach(function(bt){
+  bt.addEventListener('click', function(){
+    document.querySelectorAll('.preview-tools button').forEach(function(b){ b.classList.remove('ativo'); });
+    bt.classList.add('ativo');
+    var w = parseInt(bt.dataset.w, 10);
+    preview.style.width = w ? w + 'px' : '100%';
+    preview.style.margin = w ? '0 auto' : '0';
+    preview.style.display = 'block';
+    preview.style.borderLeft = w ? '1px solid rgba(0,0,0,.15)' : 'none';
+    preview.style.borderRight = w ? '1px solid rgba(0,0,0,.15)' : 'none';
+  });
+});
+
+/* reenvia a config quando a prévia terminar de carregar */
+preview.addEventListener('load', function(){ if (CFG) salva(); });
+})();
+</script>
+</body>
+</html>

@@ -43,16 +43,31 @@ A propagação leva de alguns minutos a algumas horas. Depois disso:
 - Painel: `https://vitoriosodoces.com.br/admin.html`
 
 ## 5. Como atualizar o cardápio no dia a dia
-1. Abra o painel (`/admin.html`) e faça login com seu e-mail e senha.
-2. Edite o que quiser (a prévia mostra na hora) e clique em **⬇ Baixar site atualizado**.
-3. No GitHub, abra o repositório → clique no arquivo `index.html` → botão de lápis não é necessário:
-   use **Add file → Upload files**, arraste o `index.html` baixado e clique em **Commit changes**.
-4. Em ~1 minuto o site está atualizado.
+O painel de administração NÃO fica na internet — ele roda só no seu computador
+(privacidade máxima: ninguém nem vê a tela de login).
+
+1. Dê dois cliques em **Abrir-Painel.bat** (na pasta C:\CardapioVitoriosoDoces).
+2. Faça login com seu e-mail e senha.
+3. Edite o que quiser (a prévia mostra na hora) e clique em **⬇ Baixar site atualizado**.
+4. Substitua o index.html da pasta C:\CardapioVitoriosoDoces pelo baixado e rode:
+
+       git add index.html
+       git commit -m "Atualiza cardapio"
+       git push
+
+   OU, se preferir sem comandos: no GitHub, abra o repositório →
+   **Add file → Upload files** → arraste o `index.html` baixado → **Commit changes**.
+5. Em ~1 minuto o site está atualizado.
 
 ## Segurança
-- O painel pede e-mail e senha, e a senha não fica gravada em lugar nenhum (só uma impressão
-  digital criptográfica). Mesmo assim, a proteção DE VERDADE é a sua conta do GitHub: só quem
-  tem acesso a ela consegue alterar o site publicado. Ative a verificação em duas etapas em
+- O painel roda apenas no seu computador — não é publicado no site. Ninguém na internet
+  tem acesso a ele.
+- Mesmo localmente ele pede e-mail e senha, e a senha não fica gravada em lugar nenhum
+  (só uma impressão digital PBKDF2 com 310 mil iterações, inviável de quebrar).
+- A proteção DE VERDADE do site publicado é a sua conta do GitHub: só quem tem acesso a
+  ela consegue alterar o que está no ar. Ative a verificação em duas etapas em
   https://github.com/settings/security.
 - Não reutilize a senha do painel em outros serviços.
+- Os dados do cardápio (produtos, preços, telefone) são públicos por natureza — é um
+  cardápio. Nenhum dado sensível fica no site.
 

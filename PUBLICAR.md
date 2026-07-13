@@ -1,4 +1,4 @@
-# Como publicar o cardápio (GitHub Pages + domínio da Hostinger)
+﻿# Como publicar o cardápio (GitHub Pages + domínio da Hostinger)
 
 ## 1. Criar o repositório no GitHub (uma vez só)
 1. Entre em https://github.com (crie a conta se ainda não tiver — use o e-mail diogenesm85@gmail.com).
@@ -8,9 +8,9 @@
 5. NÃO marque "Add a README". Clique em **Create repository**.
 
 ## 2. Enviar os arquivos (uma vez só)
-No computador, na pasta C:\CardapioVitoriosoDoces, rode (troque SEU-USUARIO):
+No computador, na pasta C:\CardapioVitoriosoDoces, rode (troque DiogenesMartinelli):
 
-    git remote add origin https://github.com/SEU-USUARIO/cardapio-vitorioso-doces.git
+    git remote add origin https://github.com/DiogenesMartinelli/cardapio-vitorioso-doces.git
     git push -u origin main
 
 Vai abrir uma janela do GitHub pedindo login — entre com sua conta e pronto.
@@ -19,12 +19,12 @@ Vai abrir uma janela do GitHub pedindo login — entre com sua conta e pronto.
 1. No repositório → **Settings** → **Pages**.
 2. Em "Build and deployment" → Source: **Deploy from a branch**.
 3. Branch: **main** / pasta **/ (root)** → **Save**.
-4. Em ~2 minutos o site estará em `https://SEU-USUARIO.github.io/cardapio-vitorioso-doces/`
+4. Em ~2 minutos o site estará em `https://DiogenesMartinelli.github.io/cardapio-vitorioso-doces/`
    - Cardápio: essa URL
    - Painel: essa URL + `/admin.html`
 
 ## 4. Conectar o domínio da Hostinger
-No GitHub: Settings → Pages → **Custom domain** → digite seu domínio (ex.: `vitoriosodoces.com.br`) → Save.
+No GitHub: Settings → Pages → **Custom domain** → digite seu domínio (`vitoriosodoces.com.br`) → Save.
 Depois marque **Enforce HTTPS** (aparece após o DNS propagar).
 
 Na Hostinger (hPanel → Domínios → seu domínio → DNS / Zona DNS), crie estes registros:
@@ -35,12 +35,12 @@ Na Hostinger (hPanel → Domínios → seu domínio → DNS / Zona DNS), crie es
 | A     | @    | 185.199.109.153          |
 | A     | @    | 185.199.110.153          |
 | A     | @    | 185.199.111.153          |
-| CNAME | www  | SEU-USUARIO.github.io    |
+| CNAME | www  | DiogenesMartinelli.github.io    |
 
 (Apague registros A e CNAME antigos de @ e www que apontem para a Hostinger.)
 A propagação leva de alguns minutos a algumas horas. Depois disso:
-- Cardápio: `https://seudominio.com.br`
-- Painel: `https://seudominio.com.br/admin.html`
+- Cardápio: `https://vitoriosodoces.com.br`
+- Painel: `https://vitoriosodoces.com.br/admin.html`
 
 ## 5. Como atualizar o cardápio no dia a dia
 1. Abra o painel (`/admin.html`) e faça login com seu e-mail e senha.
@@ -55,3 +55,4 @@ A propagação leva de alguns minutos a algumas horas. Depois disso:
   tem acesso a ela consegue alterar o site publicado. Ative a verificação em duas etapas em
   https://github.com/settings/security.
 - Não reutilize a senha do painel em outros serviços.
+

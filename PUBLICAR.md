@@ -43,31 +43,34 @@ A propagação leva de alguns minutos a algumas horas. Depois disso:
 - Painel: `https://vitoriosodoces.com.br/admin.html`
 
 ## 5. Como atualizar o cardápio no dia a dia
-O painel de administração NÃO fica na internet — ele roda só no seu computador
-(privacidade máxima: ninguém nem vê a tela de login).
+O painel fica em https://vitoriosodoces.com.br/admin.html — pode usar de qualquer
+computador ou celular.
 
-1. Dê dois cliques em **Abrir-Painel.bat** (na pasta C:\CardapioVitoriosoDoces).
-2. Faça login com seu e-mail e senha.
-3. Edite o que quiser (a prévia mostra na hora) e clique em **⬇ Baixar site atualizado**.
-4. Substitua o index.html da pasta C:\CardapioVitoriosoDoces pelo baixado e rode:
+1. Abra o painel e entre com seu e-mail e senha.
+2. Edite o que quiser (a prévia mostra na hora).
+3. Clique em **🚀 Publicar no site** → em ~1 minuto o site está atualizado. Pronto!
 
-       git add index.html
-       git commit -m "Atualiza cardapio"
-       git push
+Na PRIMEIRA vez em cada navegador, o botão Publicar pede um token do GitHub
+(instruções completas aparecem no grupo "🚀 Publicação direta" do próprio painel):
+github.com/settings/personal-access-tokens/new → acesso somente ao repositório
+cardapio-vitorioso-doces → permissão Contents: Read and write → gerar e colar no painel.
 
-   OU, se preferir sem comandos: no GitHub, abra o repositório →
-   **Add file → Upload files** → arraste o `index.html` baixado → **Commit changes**.
-5. Em ~1 minuto o site está atualizado.
+O botão **⬇ Baixar** continua existindo como alternativa manual (baixa o index.html
+para você subir no GitHub em Add file → Upload files).
 
-## Segurança
-- O painel roda apenas no seu computador — não é publicado no site. Ninguém na internet
-  tem acesso a ele.
-- Mesmo localmente ele pede e-mail e senha, e a senha não fica gravada em lugar nenhum
-  (só uma impressão digital PBKDF2 com 310 mil iterações, inviável de quebrar).
-- A proteção DE VERDADE do site publicado é a sua conta do GitHub: só quem tem acesso a
-  ela consegue alterar o que está no ar. Ative a verificação em duas etapas em
-  https://github.com/settings/security.
-- Não reutilize a senha do painel em outros serviços.
+## Como o painel é protegido
+- O arquivo admin.html publicado é 100% CRIPTOGRAFADO (AES-256-GCM). Quem abre sem a
+  senha vê só a tela de login — o código e o conteúdo do painel são indecifráveis,
+  mesmo baixando o arquivo. A chave é derivada da sua senha com PBKDF2 (310 mil
+  iterações), inviável de quebrar por força bruta.
+- O token do GitHub fica salvo criptografado SÓ no navegador em que você colou —
+  nunca é enviado para o site nem para o repositório.
+- A proteção final continua sendo a sua conta do GitHub: sem ela (ou sem um token
+  criado por ela), ninguém altera o site publicado. Ative a verificação em duas
+  etapas em https://github.com/settings/security.
+- Se um dia quiser trocar a senha do painel: rode
+  `node build-admin.js "email|nova-senha"` na pasta do projeto e suba o novo
+  admin.html (o arquivo build-admin.js fica só no seu computador).
 - Os dados do cardápio (produtos, preços, telefone) são públicos por natureza — é um
   cardápio. Nenhum dado sensível fica no site.
 

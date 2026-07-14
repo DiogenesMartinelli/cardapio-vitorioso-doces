@@ -12,7 +12,13 @@
 <script id="site-config" type="application/json">
 {
   "versao": 1,
-  "marca": { "nome": "Vitorioso Doces", "logo": "logo.png", "logoTopo": "logo.png", "logoRodape": "logo.png", "instagram": "vitoriosodoces" },
+  "marca": {
+    "nome": "Vitorioso Doces",
+    "logo": "logo.png",
+    "logoTopo": "logo.png",
+    "logoRodape": "logo.png",
+    "instagram": "vitoriosodoces"
+  },
   "whatsapp": {
     "numero": "5565999815379",
     "telefoneExibido": "(65) 99981-5379",
@@ -21,69 +27,163 @@
   },
   "tema": {
     "cores": {
-      "fundo1": "#faf2e3", "fundo2": "#f4e8d4", "fundo3": "#ead9bd",
-      "tinta": "#3f1d10", "marrom": "#5b2417", "marromMedio": "#7c3a22",
-      "caramelo": "#b06a35", "dourado": "#d3a05c",
-      "whats": "#1faa55", "whatsEscuro": "#128c46"
+      "fundo1": "#faf2e3",
+      "fundo2": "#f4e8d4",
+      "fundo3": "#ead9bd",
+      "tinta": "#3f1d10",
+      "marrom": "#5b2417",
+      "marromMedio": "#7c3a22",
+      "caramelo": "#b06a35",
+      "dourado": "#d3a05c",
+      "whats": "#1faa55",
+      "whatsEscuro": "#128c46"
     },
-    "fonteTitulos": "Fraunces", "fonteDestaques": "Oswald", "fonteTexto": "Karla",
-    "tamanhoBase": 16, "escalaTitulos": 1,
+    "fonteTitulos": "Fraunces",
+    "fonteDestaques": "Oswald",
+    "fonteTexto": "Karla",
+    "tamanhoBase": 16,
+    "escalaTitulos": 1,
     "estiloCampos": "vidro",
     "arredondamento": 28,
     "animacoes": true
   },
-  "layout": { "colunas": 2, "cabecalho": "classico", "rodape": "curvo" },
+  "layout": {
+    "colunas": 2,
+    "cabecalho": "faixa",
+    "rodape": "curvo"
+  },
   "topo": {
     "titulo": "Doces artesanais que conquistam no primeiro pedaço",
     "subtitulo": "Bolos de pote, brownies e sobremesas na taça — preparados todos os dias, com ingredientes de verdade e aquele capricho de confeitaria de bairro.",
     "notaEntrega": "Fazemos entrega",
-    "selo": { "modo": "girando", "texto": "FEITO COM AMOR · ARTESANAL · FEITO COM AMOR ·", "centro": "VD", "tamanho": 110 }
+    "selo": {
+      "modo": "girando",
+      "texto": "FEITO COM AMOR -  -  - ARTESANAL -  -  -",
+      "centro": "VD",
+      "tamanho": 120
+    }
   },
   "faixa": {
-    "ativa": true, "velocidade": 26,
-    "itens": ["Bolos de pote", "Brownies", "Copo da felicidade", "Torta de pote", "Fazemos entrega"]
+    "ativa": true,
+    "velocidade": 26,
+    "itens": [
+      "Bolos de pote",
+      "Brownies",
+      "Copo da felicidade",
+      "Torta de pote",
+      "Fazemos entrega",
+      "Feito com Amor"
+    ]
   },
-  "menuNav": { "ativo": false, "itens": [] },
+  "menuNav": {
+    "ativo": false,
+    "itens": []
+  },
   "secoes": [
     {
-      "id": "bolos", "titulo": "Bolos de Pote", "etiqueta": "250ml",
+      "id": "bolos",
+      "titulo": "Bolos de Pote",
+      "etiqueta": "250ml",
       "subtitulo": "Camadas generosas de bolo fofinho e recheio cremoso",
-      "arte": "pote", "paginaSeparada": false,
+      "arte": "pote",
+      "paginaSeparada": false,
       "produtos": [
-        { "nome": "Chocolate", "preco": "R$ 12", "medida": "", "mensagem": "" },
-        { "nome": "Doce de Leite", "preco": "R$ 12", "medida": "", "mensagem": "" },
-        { "nome": "Ninho", "preco": "R$ 12", "medida": "", "mensagem": "" },
-        { "nome": "Dois Amores", "preco": "R$ 12", "medida": "", "mensagem": "" }
+        {
+          "nome": "Chocolate",
+          "preco": "R$ 12",
+          "medida": "",
+          "mensagem": ""
+        },
+        {
+          "nome": "Doce de Leite",
+          "preco": "R$ 12",
+          "medida": "",
+          "mensagem": ""
+        },
+        {
+          "nome": "Ninho",
+          "preco": "R$ 12",
+          "medida": "",
+          "mensagem": ""
+        },
+        {
+          "nome": "Dois Amores",
+          "preco": "R$ 12",
+          "medida": "",
+          "mensagem": ""
+        }
       ]
     },
     {
-      "id": "brownies", "titulo": "Brownies", "etiqueta": "",
+      "id": "brownies",
+      "titulo": "Brownies",
+      "etiqueta": "",
       "subtitulo": "Casquinha craquelada por fora, úmido por dentro",
-      "arte": "brownie", "paginaSeparada": false,
-      "produtos": [ { "nome": "Chocolate", "preco": "R$ 8", "medida": "", "mensagem": "" } ]
-    },
-    {
-      "id": "copo", "titulo": "Copo da Felicidade", "etiqueta": "",
-      "subtitulo": "Camadas cremosas que fazem jus ao nome",
-      "arte": "copo", "paginaSeparada": false,
+      "arte": "brownie",
+      "paginaSeparada": false,
       "produtos": [
-        { "nome": "Ninho c/ Brownie", "preco": "R$ 15", "medida": "", "mensagem": "" },
-        { "nome": "Chocolate / Ninho", "preco": "R$ 15", "medida": "", "mensagem": "" }
+        {
+          "nome": "Chocolate",
+          "preco": "R$ 8",
+          "medida": "",
+          "mensagem": ""
+        }
       ]
     },
     {
-      "id": "torta", "titulo": "Torta de Pote", "etiqueta": "",
+      "id": "copo",
+      "titulo": "Copo da Felicidade",
+      "etiqueta": "",
+      "subtitulo": "Camadas cremosas que fazem jus ao nome",
+      "arte": "copo",
+      "paginaSeparada": false,
+      "produtos": [
+        {
+          "nome": "Ninho c/ Brownie",
+          "preco": "R$ 15",
+          "medida": "",
+          "mensagem": ""
+        },
+        {
+          "nome": "Chocolate / Ninho",
+          "preco": "R$ 15",
+          "medida": "",
+          "mensagem": ""
+        }
+      ]
+    },
+    {
+      "id": "torta",
+      "titulo": "Torta de Pote",
+      "etiqueta": "",
       "subtitulo": "Sobremesa gelada com recheio trufado",
-      "arte": "torta", "paginaSeparada": false,
-      "produtos": [ { "nome": "Maracujá Trufado", "preco": "R$ 20", "medida": "", "mensagem": "" } ]
+      "arte": "torta",
+      "paginaSeparada": false,
+      "produtos": [
+        {
+          "nome": "Maracujá Trufado",
+          "preco": "R$ 20",
+          "medida": "",
+          "mensagem": ""
+        }
+      ]
     }
   ],
   "passos": {
     "ativo": true,
     "itens": [
-      { "titulo": "Escolha seu doce", "texto": "Navegue pelo cardápio e escolha os sabores que mais combinam com você." },
-      { "titulo": "Chame no WhatsApp", "texto": "Toque em \"Pedir\" e a mensagem já vai prontinha — é só enviar." },
-      { "titulo": "Receba em casa", "texto": "Fazemos entrega! Seu pedido chega fresquinho até você." }
+      {
+        "titulo": "Escolha seu doce",
+        "texto": "Navegue pelo cardápio e escolha os sabores que mais combinam com você."
+      },
+      {
+        "titulo": "Chame no WhatsApp",
+        "texto": "Toque em \"Pedir\" e a mensagem já vai prontinha — é só enviar."
+      },
+      {
+        "titulo": "Receba em casa",
+        "texto": "Fazemos entrega! Seu pedido chega fresquinho até você."
+      }
     ]
   },
   "rodape": {
@@ -97,8 +197,18 @@
     "itens": []
   },
   "paginas": {
-    "sobre": { "ativa": false, "titulo": "Sobre nós", "texto": "Somos a Vitorioso Doces, uma confeitaria artesanal feita com muito carinho. Cada doce é preparado no dia, com ingredientes de verdade." },
-    "local": { "ativa": false, "titulo": "Onde estamos", "endereco": "", "linkMaps": "", "texto": "Fazemos entrega! Chame no WhatsApp para combinar." }
+    "sobre": {
+      "ativa": false,
+      "titulo": "Sobre nós",
+      "texto": "Somos a Vitorioso Doces, uma confeitaria artesanal feita com muito carinho. Cada doce é preparado no dia, com ingredientes de verdade."
+    },
+    "local": {
+      "ativa": false,
+      "titulo": "Onde estamos",
+      "endereco": "",
+      "linkMaps": "",
+      "texto": "Fazemos entrega! Chame no WhatsApp para combinar."
+    }
   }
 }
 </script>

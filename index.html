@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vitorioso Doces · Cardápio</title>
 <meta name="description" content="Cardápio online da Vitorioso Doces — peça direto pelo WhatsApp. Fazemos entrega!">
+<link id="favicon" rel="icon" type="image/png" href="logo.png">
+<link id="appleicon" rel="apple-touch-icon" href="logo.png">
 
 <!-- ═══════════════ CONFIGURAÇÃO DO SITE (editada pelo admin.html) ═══════════════ -->
 <script id="site-config" type="application/json">
 {
   "versao": 1,
-  "marca": { "nome": "Vitorioso Doces", "logo": "logo.png", "instagram": "vitoriosodoces" },
+  "marca": { "nome": "Vitorioso Doces", "logo": "logo.png", "logoTopo": "logo.png", "logoRodape": "logo.png", "instagram": "vitoriosodoces" },
   "whatsapp": {
     "numero": "5565999815379",
     "telefoneExibido": "(65) 99981-5379",
@@ -84,7 +86,16 @@
       { "titulo": "Receba em casa", "texto": "Fazemos entrega! Seu pedido chega fresquinho até você." }
     ]
   },
-  "rodape": { "texto": "Feito à mão, todos os dias · Cuiabá — MT" },
+  "rodape": {
+    "texto": "Feito à mão, todos os dias · Cuiabá — MT",
+    "creditoTexto": "Diogenes Martinelli",
+    "creditoUrl": "https://github.com/DiogenesMartinelli"
+  },
+  "patrocinadores": {
+    "ativo": false,
+    "titulo": "Quem apoia a gente",
+    "itens": []
+  },
   "paginas": {
     "sobre": { "ativa": false, "titulo": "Sobre nós", "texto": "Somos a Vitorioso Doces, uma confeitaria artesanal feita com muito carinho. Cada doce é preparado no dia, com ingredientes de verdade." },
     "local": { "ativa": false, "titulo": "Onde estamos", "endereco": "", "linkMaps": "", "texto": "Fazemos entrega! Chame no WhatsApp para combinar." }
@@ -361,6 +372,22 @@
   .page-card .btn{ margin-top:22px; }
   .page-logo{ width:120px; display:block; margin:0 auto 10px; }
 
+  /* ═══ PATROCINADORES ═══ */
+  .patros{ max-width:1080px; margin:0 auto; padding:0 20px 60px; text-align:center; }
+  .patros .kicker{ font-family:var(--f-destaque); letter-spacing:.3em; text-transform:uppercase;
+    font-size:.76rem; font-weight:600; color:var(--caramelo); }
+  .patros h3{ font-family:var(--f-titulo); font-weight:900; color:var(--marrom);
+    font-size:1.3rem; margin-top:8px; }
+  .patros-grid{ margin-top:26px; display:flex; flex-wrap:wrap; gap:16px; justify-content:center; align-items:stretch; }
+  .patro{ display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none;
+    padding:16px 22px; border-radius:calc(var(--radius) * .6);
+    background:var(--glass); border:1.5px solid var(--glass-brd);
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    box-shadow:var(--shadow-soft); transition:transform .3s, box-shadow .3s; min-width:120px; }
+  a.patro:hover{ transform:translateY(-4px); box-shadow:0 22px 44px -18px rgba(63,29,16,.4); }
+  .patro img{ height:52px; max-width:140px; object-fit:contain; }
+  .patro span{ font-size:.78rem; font-weight:700; color:var(--marrom-med); }
+
   /* ═══ RODAPÉS ═══ */
   footer.rod-curvo{ position:relative; margin-top:20px; padding:64px 20px 110px; text-align:center;
     background:linear-gradient(170deg, var(--marrom) 0%, #2e130a 100%);
@@ -394,6 +421,9 @@
   footer.rod-claro .links a:hover{ transform:translateY(-3px); background:#fff; }
   footer .links svg{ width:17px; height:17px; }
   footer .tiny{ margin-top:30px; font-size:.8rem; opacity:.55; letter-spacing:.06em; }
+  footer .credito{ margin-top:10px; font-size:.76rem; opacity:.5; letter-spacing:.04em; }
+  footer .credito a{ color:inherit; font-weight:700; text-decoration:none; }
+  footer .credito a:hover{ text-decoration:underline; }
 
   /* ═══ FAB ═══ */
   .fab{ position:fixed; right:22px; bottom:22px; z-index:50; width:62px; height:62px; border-radius:50%;
@@ -529,6 +559,11 @@
     document.body.classList.toggle('estilo-solido', t.estiloCampos === 'solido');
     document.body.classList.toggle('estilo-contorno', t.estiloCampos === 'contorno');
     document.documentElement.classList.toggle('no-anim', !t.animacoes);
+    var icone = logoTopo();
+    var fav = document.getElementById('favicon'), apple = document.getElementById('appleicon');
+    if (fav && fav.getAttribute('href') !== icone) fav.setAttribute('href', icone);
+    if (apple && apple.getAttribute('href') !== icone) apple.setAttribute('href', icone);
+    if (document.title.indexOf('·') > -1) document.title = CFG.marca.nome + ' · Cardápio';
   }
 
   /* ── blocos de HTML ───────────────────────────────────── */
@@ -570,9 +605,12 @@
       ' &nbsp;·&nbsp; ' + esc(CFG.whatsapp.telefoneExibido) + '</span>';
   }
 
+  function logoTopo(){ return CFG.marca.logoTopo || CFG.marca.logo || 'logo.png'; }
+  function logoRodape(){ return CFG.marca.logoRodape || CFG.marca.logo || 'logo.png'; }
+
   function htmlHero(){
     var m = CFG.layout.cabecalho;
-    var logo = '<div class="hero-badge-wrap"><img class="hero-logo" src="' + esc(CFG.marca.logo) + '" alt="Logo ' + esc(CFG.marca.nome) + '">' + htmlSelo() + '</div>';
+    var logo = '<div class="hero-badge-wrap"><img class="hero-logo" src="' + esc(logoTopo()) + '" alt="Logo ' + esc(CFG.marca.nome) + '">' + htmlSelo() + '</div>';
     if (m === 'faixa') {
       return '<header class="hero hero-faixa">' + logo +
         '<div class="hero-txt"><h1>' + esc(CFG.topo.titulo) + '</h1>' +
@@ -624,6 +662,19 @@
     return '<section class="steps"><div class="steps-grid">' + itens + '</div></section>';
   }
 
+  function htmlPatrocinadores(){
+    var pt = CFG.patrocinadores;
+    if (!pt || !pt.ativo || !pt.itens.length) return '';
+    var itens = pt.itens.map(function(s){
+      var tag = s.link ? 'a href="' + esc(s.link) + '" target="_blank" rel="noopener"' : 'div';
+      var fecha = s.link ? 'a' : 'div';
+      return '<' + tag + ' class="patro"><img src="' + esc(s.logo) + '" alt="' + esc(s.nome) + '" loading="lazy">' +
+        '<span>' + esc(s.nome) + '</span></' + fecha + '>';
+    }).join('');
+    return '<section class="patros"><span class="kicker">Apoio</span><h3>' + esc(pt.titulo) + '</h3>' +
+      '<div class="patros-grid">' + itens + '</div></section>';
+  }
+
   function htmlLinksContato(){
     return '<div class="links">' +
       '<a href="https://wa.me/' + soDigitos(CFG.whatsapp.numero) + '" target="_blank" rel="noopener">' + ICON_WA + ' ' + esc(CFG.whatsapp.telefoneExibido) + '</a>' +
@@ -633,12 +684,21 @@
       '</div>';
   }
 
+  function htmlCredito(){
+    var t = CFG.rodape.creditoTexto;
+    if (!t) return '';
+    var conteudo = CFG.rodape.creditoUrl
+      ? '<a href="' + esc(CFG.rodape.creditoUrl) + '" target="_blank" rel="noopener">' + esc(t) + '</a>'
+      : esc(t);
+    return '<p class="credito">Desenvolvido por ' + conteudo + '</p>';
+  }
+
   function htmlRodape(){
     var m = CFG.layout.rodape;
-    var badge = '<div class="foot-badge"><img src="' + esc(CFG.marca.logo) + '" alt="Logo"></div>';
-    var logoPlano = '<img class="foot-logo-plain" src="' + esc(CFG.marca.logo) + '" alt="Logo">';
+    var badge = '<div class="foot-badge"><img src="' + esc(logoRodape()) + '" alt="Logo"></div>';
+    var logoPlano = '<img class="foot-logo-plain" src="' + esc(logoRodape()) + '" alt="Logo">';
     var brand = '<div class="brand">' + esc(CFG.marca.nome) + '</div>';
-    var tiny = '<p class="tiny">' + esc(CFG.marca.nome) + ' · ' + esc(CFG.rodape.texto) + '</p>';
+    var tiny = '<p class="tiny">' + esc(CFG.marca.nome) + ' · ' + esc(CFG.rodape.texto) + '</p>' + htmlCredito();
     if (m === 'claro') return '<footer class="rod-claro">' + logoPlano + brand + htmlLinksContato() + tiny + '</footer>';
     if (m === 'reto')  return '<footer class="rod-reto">' + badge + brand + htmlLinksContato() + tiny + '</footer>';
     return '<footer class="rod-curvo">' + badge + brand + htmlLinksContato() + tiny + '</footer>';
@@ -652,7 +712,7 @@
 
   function htmlPagina(conteudo){
     return '<div class="page-wrap"><a class="page-back" href="#/">← Voltar ao cardápio</a>' +
-      '<div class="page-card"><img class="page-logo" src="' + esc(CFG.marca.logo) + '" alt="Logo">' + conteudo + '</div></div>';
+      '<div class="page-card"><img class="page-logo" src="' + esc(logoTopo()) + '" alt="Logo">' + conteudo + '</div></div>';
   }
 
   /* ── roteador + render ────────────────────────────────── */
@@ -683,7 +743,7 @@
     } else {
       var secoesHome = CFG.secoes.filter(function(s){ return !s.paginaSeparada; });
       html = htmlNav() + '<main>' + htmlHero() + htmlFaixa() +
-        htmlMenu(secoesHome) + htmlPassos() + htmlRodape() + '</main>' + htmlFab();
+        htmlMenu(secoesHome) + htmlPassos() + htmlPatrocinadores() + htmlRodape() + '</main>' + htmlFab();
     }
     app.innerHTML = html;
     iniciaRevelacao();
